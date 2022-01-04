@@ -1,0 +1,15 @@
+[package]
+name = "myapp"
+version = "0.0.0"
+edition = "2021"
+
+[[bin]]
+name = "myapp"
+path = "target/release/rust-src/main.rs"
+
+[dependencies]
+
+[dependencies.inner_druid]
+package = "druid"
+git = "https://github.com/linebender/druid"
+rev = "2f5beb8faba648c170a485b8d6a00d0d991a1737"

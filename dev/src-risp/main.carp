@@ -1,0 +1,41 @@
+(ns main
+  (:require
+   [druid.widget.prelude :refer []]
+   [druid.widget :refer [Flex Label TextBox]]
+   [druid :refer [AppLauncher, Data, Lens, UnitPoint, WidgetExt, WindowDesc]]))
+
+(def ^f64 VERTICAL_WIDGET_SPACING 20.0)
+(def ^f64 TEXT_BOX_WIDTH 200.0)
+
+(defstruct HelloState
+  {:derive #{Clone Data Lens}}
+  [^String name])
+
+(defn build-root-widget
+  {:=> [:impl #/(Widget HelloState)]}
+  []
+  (let [label (-> (Label/new (fn [^&HelloState data ^&Env _env]
+                               (if (.is-empty (.-name data))
+                                 (.to-string "Hello")
+                                 (format "Hello {}" (.-name data)))))
+                  (.with-text-size 32.0))
+        textbox (-> (TextBox/new)
+                    (.with-placeholder "Who is this")
+                    (.with-text-size 18.0)
+                    (.fix-width TEXT_BOX_WIDTH)
+                    (.lens HelloState/name))]
+    (-> (Flex/column)
+        (.with-child label)
+        (.with-spacer VERTICAL_WIDGET_SPACING)
+        (.with-child textbox)
+        (.align-vertical UnitPoint/CENTER))))
+
+(defn main []
+  (let [main-window (-> (WindowDesc/new (build-root-widget))
+                        (.title "Hello world!")
+                        (.window-size (tuple 400.0 400.0)))
+        initial-state (HelloState. :name (.into "World"))]
+    (-> (AppLauncher/with-window main-window)
+        ;; (.log-to-console)
+        (.launch initial-state)
+        (.expect "Failed to launch application"))))

@@ -1,0 +1,34 @@
+[package]
+name = "_deps"
+version = "0.1.0"
+edition = "2021"
+
+[build]
+rustflags = [
+    "-C", "link-arg=-undefined","-C", "link-arg=dynamic_lookup", # allow undefined symbols
+    "-C", "link-args=-rdynamic", # export symbols in an executable
+    "-C", "prefer-dynamic=yes",
+    "--emit=metadata"
+]
+
+[lib]
+name = "_deps"
+crate-type = ["rlib", "dylib"]
+
+[dependencies.libloading]
+package = "libloading"
+version = "0.7.2"
+
+[dependencies.druid]
+package = "druid"
+git = "https://github.com/linebender/druid"
+rev = "2f5beb8faba648c170a485b8d6a00d0d991a1737"
+
+# [dependencies._inner_libloading]
+# package = "libloading"
+# version = "0.7.2"
+
+# [dependencies._inner_druid]
+# package = "druid"
+# git = "https://github.com/linebender/druid"
+# rev = "2f5beb8faba648c170a485b8d6a00d0d991a1737"
